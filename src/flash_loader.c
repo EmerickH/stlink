@@ -302,7 +302,18 @@ int stlink_flash_loader_write_to_sram(stlink_t *sl, stm32_addr_t* addr, size_t* 
         if (retval == -1) {
             return retval;
         }
-    } else if (sl->chip_id == STLINK_CHIPID_STM32_F0 || sl->chip_id == STLINK_CHIPID_STM32_F04 || sl->chip_id == STLINK_CHIPID_STM32_F0_CAN || sl->chip_id == STLINK_CHIPID_STM32_F0_SMALL || sl->chip_id == STLINK_CHIPID_STM32_F09X) {
+    } else if (sl->chip_id == STLINK_CHIPID_STM32_F0        ||
+	       sl->chip_id == STLINK_CHIPID_STM32_F04       ||
+	       sl->chip_id == STLINK_CHIPID_STM32_F0_CAN    ||
+	       sl->chip_id == STLINK_CHIPID_STM32_F0_SMALL  ||
+	       sl->chip_id == STLINK_CHIPID_STM32_F09X      ||
+	       sl->chip_id == STLINK_CHIPID_STM32_F1_MEDIUM ||
+	       sl->chip_id == STLINK_CHIPID_STM32_F1_LOW    ||
+	       sl->chip_id == STLINK_CHIPID_STM32_F1_HIGH   ||
+	       sl->chip_id == STLINK_CHIPID_STM32_F1_CONN   ||
+	       sl->chip_id == STLINK_CHIPID_STM32_F1_VL_MEDIUM_LOW ||
+	       sl->chip_id == STLINK_CHIPID_STM32_F1_VL_HIGH
+	       ) {
         loader_code = loader_code_stm32f0;
         loader_size = sizeof(loader_code_stm32f0);
     } else if ((sl->chip_id == STLINK_CHIPID_STM32_L4) ||
