@@ -77,6 +77,14 @@ static const uint8_t loader_code_stm32vl[] = {
         0x00, 0x20, 0x02, 0x40, /* STM32_FLASH_BASE: .word 0x40022000 */
     };
 
+    /* from https://github.com/ntfreak/openocd/blob/98a07154bc588d40b16f4f07b70937133f55e97e/contrib/loaders/flash/stm32/stm32f1x.inc#L1 */
+    static const uint8_t loader_code_stm32f1[] = {
+        0x16,0x68,0x00,0x2e,0x18,0xd0,0x55,0x68,0xb5,0x42,0xf9,0xd0,0x2e,0x88,0x26,0x80,
+        0x02,0x35,0x02,0x34,0xc6,0x68,0x01,0x27,0x3e,0x42,0xfb,0xd1,0x14,0x27,0x3e,0x42,
+        0x08,0xd1,0x9d,0x42,0x01,0xd3,0x15,0x46,0x08,0x35,0x55,0x60,0x01,0x39,0x00,0x29,
+        0x02,0xd0,0xe5,0xe7,0x00,0x20,0x50,0x60,0x30,0x46,0x00,0xbe,
+    }
+
     static const uint8_t loader_code_stm32l[] = {
         // flashloaders/stm32lx.s
 
@@ -306,16 +314,19 @@ int stlink_flash_loader_write_to_sram(stlink_t *sl, stm32_addr_t* addr, size_t* 
 	       sl->chip_id == STLINK_CHIPID_STM32_F04       ||
 	       sl->chip_id == STLINK_CHIPID_STM32_F0_CAN    ||
 	       sl->chip_id == STLINK_CHIPID_STM32_F0_SMALL  ||
-	       sl->chip_id == STLINK_CHIPID_STM32_F09X      ||
-	       sl->chip_id == STLINK_CHIPID_STM32_F1_MEDIUM ||
+	       sl->chip_id == STLINK_CHIPID_STM32_F09X
+	       ) {
+        loader_code = loader_code_stm32f0;
+        loader_size = sizeof(loader_code_stm32f0);
+    } else if (sl->chip_id == STLINK_CHIPID_STM32_F1_MEDIUM ||
 	       sl->chip_id == STLINK_CHIPID_STM32_F1_LOW    ||
 	       sl->chip_id == STLINK_CHIPID_STM32_F1_HIGH   ||
 	       sl->chip_id == STLINK_CHIPID_STM32_F1_CONN   ||
 	       sl->chip_id == STLINK_CHIPID_STM32_F1_VL_MEDIUM_LOW ||
 	       sl->chip_id == STLINK_CHIPID_STM32_F1_VL_HIGH
 	       ) {
-        loader_code = loader_code_stm32f0;
-        loader_size = sizeof(loader_code_stm32f0);
+        loader_code = loader_code_stm32f1;
+        loader_size = sizeof(loader_code_stm32f1);
     } else if ((sl->chip_id == STLINK_CHIPID_STM32_L4) ||
               (sl->chip_id == STLINK_CHIPID_STM32_L43X) ||
               (sl->chip_id == STLINK_CHIPID_STM32_L46X) ||
